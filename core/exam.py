@@ -153,8 +153,6 @@ class ExamSession:
         """Serve the task sheet to a window beside the candidate's terminals.
         Best-effort: a panel that won't start must never prevent an exam from
         running."""
-        if not self.gui_port:
-            return
         from core import task_gui
         from core.panel_control import PanelController
         task_gui.clear_marks()
@@ -199,12 +197,9 @@ class ExamSession:
                 pass
 
     def _stop_task_panel(self):
-        if self.panel:
-            try:
-                self.panel.stop()
-            except Exception:
-                pass
-            self.panel = None
+        from core import task_gui
+        task_gui.close_panel(self.panel)
+        self.panel = None
 
     def _provision_devices(self):
         """Assign a distinct practice device to each whole-disk task so an LVM
